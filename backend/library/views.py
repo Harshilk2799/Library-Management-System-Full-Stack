@@ -7,7 +7,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from .serializers import *
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from django.contrib.auth.models import User
 
 class AdminLoginAPI(APIView):
@@ -194,3 +194,12 @@ class AdminChangePassword(APIView):
         user.save(update_fields=["password"])
 
         return Response({"success": True, "message": "Password changed successfully."}, status=status.HTTP_200_OK)
+    
+class StudentRegistrationAPI(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"success": True, "message": "Student registered successfully", "student": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({"success": False, "message": "Registration failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

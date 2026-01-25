@@ -51,7 +51,13 @@ function AdminChangePassword() {
         toast.error(res.data.message || "Failed to change password.");
       }
     } catch (error) {
-      toast.error("Something went wrong!");
+      console.log(error);
+      if (error.response.data.errors) {
+        toast.error(error.response.data.errors[0]);
+      }
+      if (error.response.data.message) {
+        toast.error(error.response.data.message);
+      }
     } finally {
       setIsLoading(false);
     }

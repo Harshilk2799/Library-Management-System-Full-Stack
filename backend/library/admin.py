@@ -11,7 +11,7 @@ class AuthorAdmin(admin.ModelAdmin):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ["student_id", "full_name", "email", "mobile", "password", "is_active"]
+    list_display = ["full_name", "email", "mobile", "password", "is_active"]
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
@@ -19,4 +19,4 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(IssuedBook)
 class IssuedBookAdmin(admin.ModelAdmin):
-    list_display = ["book__title", "student__student_id", "issued_at", "is_returned", "fine", "remark"]
+    list_display = ["book__title", "issued_at", "is_returned", "fine", "remark"]

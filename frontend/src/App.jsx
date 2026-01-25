@@ -12,6 +12,7 @@ import ManageAuthor from "./pages/ManageAuthor";
 import AddBook from "./pages/AddBook";
 import ManageBook from "./pages/ManageBook";
 import AdminChangePassword from "./pages/AdminChangePassword";
+import UserSignup from "./pages/UserSignup";
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/user/signup" element={<UserSignup />} />
       </Routes>
     </BrowserRouter>
   );

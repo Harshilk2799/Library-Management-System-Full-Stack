@@ -6,5 +6,6 @@ urlpatterns = [
     path("admin/category/", CategoryAPI.as_view(), name="category"),
     path("admin/author/", AuthorAPI.as_view(), name="author"),
     path("admin/book/", BookAPI.as_view(), name="book"),
-    path("admin/change-password/", AdminChangePassword.as_view(), name="change-password")
+    path("admin/change-password/", AdminChangePassword.as_view(), name="change-password"),
+    path("user/signup/", StudentRegistrationAPI.as_view(), name="user-signup")
 ]
