@@ -9,6 +9,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework.permissions import IsAdminUser, AllowAny
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password
 
 class AdminLoginAPI(APIView):
     def post(self, request):
@@ -203,3 +204,42 @@ class StudentRegistrationAPI(APIView):
             serializer.save()
             return Response({"success": True, "message": "Student registered successfully", "student": serializer.data}, status=status.HTTP_201_CREATED)
         return Response({"success": False, "message": "Registration failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class StudentLoginAPI(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        serializer = StudentLoginSerializer(data=request.data)
+        if serializer.is_valid():
+
+            email = serializer.validated_data.get("email")
+            password = serializer.validated_data.get("password")
+            
+            try:
+                student = Student.objects.get(email=email, is_active=True)
+                if check_password(password, student.password):
+                    return Response({"success": True, "message": "Login Successful!", "student_id": student.uid, "student_name": student.full_name}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"errors":{"non_field_errors":["Email or Password is not valid!!!"]}}, status=status.HTTP_401_UNAUTHORIZED)
+            except Student.DoesNotExist:
+                return Response({"success": False, "errors":{"non_field_errors":["Email or Password is not valid!!!"]}})
+        return Response({"success": False, "message": "Login failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+class StudentStats(APIView):
+    def get(self, request):
+        student_id = request.query_params.get("student_id")
+        try:
+            student = Student.objects.get(uid=student_id)
+        except Student.DoesNotExist:
+            return Response({"success": False, "message": "Student not found!"}, status=status.HTTP_404_NOT_FOUND)
+
+        total_books = Book.objects.count()
+        total_issued = IssuedBook.objects.filter(student=student).count()
+        not_returned = IssuedBook.objects.filter(student=student, is_returned=False).count()
+
+        stats = {
+            "total_books": total_books,
+            "total_issued": total_issued,
+            "not_returned": not_returned
+        }
+        return Response({"success": True, "stats": stats}, status=status.HTTP_200_OK)

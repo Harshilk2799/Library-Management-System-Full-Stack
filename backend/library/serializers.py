@@ -49,3 +49,7 @@ class StudentSerializer(serializers.ModelSerializer):
         if data.get("password") != data.get("confirm_password"):
             raise serializers.ValidationError("Password and Confirm Password doesn't match!!")
         return data
+    
+class StudentLoginSerializer(serializers.Serializer):
+    email = serializers.CharField(max_length=255)
+    password = serializers.CharField(max_length=255, write_only=True)

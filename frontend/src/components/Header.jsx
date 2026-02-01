@@ -6,15 +6,24 @@ function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(localStorage.getItem("adminUser"));
+  const [studentUser, setStudentUser] = useState(
+    localStorage.getItem("studentUserInfo")
+  );
 
   function handleAdminLogout() {
     localStorage.removeItem("adminUser");
     setUser(null);
     navigate("/admin/login");
   }
+  function handleStudentLogout() {
+    localStorage.removeItem("studentUserInfo");
+    setUser(null);
+    navigate("/user/login");
+  }
 
   useEffect(() => {
     setUser(localStorage.getItem("adminUser"));
+    setStudentUser(localStorage.getItem("studentUserInfo"));
   }, [location]);
 
   function isActive(path) {
@@ -50,7 +59,7 @@ function Header() {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-            {!user && (
+            {!user && !studentUser && (
               <>
                 <li className="nav-item">
                   <Link className={`nav-link ${isActive("/")}`} to="/">
@@ -201,6 +210,70 @@ function Header() {
                     <i className="fa-solid fa-right-from-bracket me-1"></i>
                     Logout
                   </button>
+                </li>
+              </>
+            )}
+
+            {/* Admin */}
+            {studentUser && (
+              <>
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link ${isActive("/user/dashboard")}`}
+                    to="/user/dashboard"
+                  >
+                    <i className="fa-solid fa-gauge me-1"></i> Dashboard
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link ${isActive("/user/books")}`}
+                    to="/user/books"
+                  >
+                    <i className="fa-solid fa-book-open me-1"></i> My Library
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link ${isActive("/user/issued-books")}`}
+                    to="/user/issued-books"
+                  >
+                    <i className="fa-solid fa-receipt me-1"></i> Issued Books
+                  </Link>
+                </li>
+                <li className="nav-item dropdown">
+                  <button
+                    className="nav-link dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                  >
+                    <i className="fa-solid fa-circle-user me-1"></i> My Account
+                  </button>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <Link className="dropdown-item" to="/user/profile">
+                        <i className="fa-solid fa-id-badge me-1"></i> Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        className="dropdown-item"
+                        to="/user/change-password"
+                      >
+                        <i className="fa-solid fa-key me-1"></i> Change Password
+                      </Link>
+                    </li>
+                    <hr className="dropdown-divider" />
+                    <li>
+                      <button
+                        onClick={handleStudentLogout}
+                        className="dropdown-item text-danger"
+                      >
+                        <i className="fa-solid fa-right-from-bracket me-1"></i>
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
                 </li>
               </>
             )}

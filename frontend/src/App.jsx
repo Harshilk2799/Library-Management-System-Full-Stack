@@ -13,6 +13,9 @@ import AddBook from "./pages/AddBook";
 import ManageBook from "./pages/ManageBook";
 import AdminChangePassword from "./pages/AdminChangePassword";
 import UserSignup from "./pages/UserSignup";
+import UserLogin from "./pages/UserLogin";
+import StudentDashboard from "./pages/StudentDashboard";
+import StudentProtectedRoute from "./pages/StudentProtectedRoute";
 
 function App() {
   return (
@@ -79,6 +82,15 @@ function App() {
           }
         />
         <Route path="/user/signup" element={<UserSignup />} />
+        <Route path="/user/login" element={<UserLogin />} />
+        <Route
+          path="/user/dashboard"
+          element={
+            <StudentProtectedRoute>
+              <StudentDashboard />
+            </StudentProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

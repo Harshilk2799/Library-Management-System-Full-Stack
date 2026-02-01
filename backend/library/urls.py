@@ -7,5 +7,7 @@ urlpatterns = [
     path("admin/author/", AuthorAPI.as_view(), name="author"),
     path("admin/book/", BookAPI.as_view(), name="book"),
     path("admin/change-password/", AdminChangePassword.as_view(), name="change-password"),
-    path("user/signup/", StudentRegistrationAPI.as_view(), name="user-signup")
+    path("user/signup/", StudentRegistrationAPI.as_view(), name="user-signup"),
+    path("user/login/", StudentLoginAPI.as_view(), name="user-login"),
+    path("user/stats/", StudentStats.as_view(), name="user-stats")
 ]
