@@ -68,7 +68,7 @@ function UserLogin() {
           <div className="col-md-8 mx-auto text-center">
             <h4 className="fw-semibold mb-1">
               <i className="fa-solid fa-user text-primary me-2"></i>
-              User Login
+              Student Login
             </h4>
             <p className="text-muted small">
               Please enter your login credentials to access your account.
