@@ -1,21 +1,23 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import AdminLogin from "./pages/AdminLogin";
+import AdminLogin from "./pages/admin/AdminLogin";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AdminDashboard from "./pages/AdminDashboard";
-import AddCategory from "./pages/AddCategory";
-import ManageCategory from "./pages/ManageCategory";
-import ProtectedRoute from "./pages/ProtectedRoute";
-import AddAuthor from "./pages/AddAuthor";
-import ManageAuthor from "./pages/ManageAuthor";
-import AddBook from "./pages/AddBook";
-import ManageBook from "./pages/ManageBook";
-import AdminChangePassword from "./pages/AdminChangePassword";
-import UserSignup from "./pages/UserSignup";
-import UserLogin from "./pages/UserLogin";
-import StudentDashboard from "./pages/StudentDashboard";
-import StudentProtectedRoute from "./pages/StudentProtectedRoute";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AddCategory from "./pages/admin/AddCategory";
+import ManageCategory from "./pages/admin/ManageCategory";
+import AdminProtectedRoute from "./pages/auth/AdminProtectedRoute";
+import AddAuthor from "./pages/admin/AddAuthor";
+import ManageAuthor from "./pages/admin/ManageAuthor";
+import AddBook from "./pages/admin/AddBook";
+import ManageBook from "./pages/admin/ManageBook";
+import AdminChangePassword from "./pages/admin/AdminChangePassword";
+import UserSignup from "./pages/student/UserSignup";
+import UserLogin from "./pages/student/UserLogin";
+import StudentDashboard from "./pages/student/StudentDashboard";
+import StudentProtectedRoute from "./pages/auth/StudentProtectedRoute";
+import StudentBooks from "./pages/student/StudentBooks";
+import StudentProfile from "./pages/student/StudentProfile";
 
 function App() {
   return (
@@ -28,57 +30,57 @@ function App() {
         <Route
           path="/admin/add-category"
           element={
-            <ProtectedRoute>
+            <AdminProtectedRoute>
               <AddCategory />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
         <Route
           path="/admin/manage-category"
           element={
-            <ProtectedRoute>
+            <AdminProtectedRoute>
               <ManageCategory />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
         <Route
           path="/admin/add-author"
           element={
-            <ProtectedRoute>
+            <AdminProtectedRoute>
               <AddAuthor />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
         <Route
           path="/admin/manage-author"
           element={
-            <ProtectedRoute>
+            <AdminProtectedRoute>
               <ManageAuthor />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
         <Route
           path="/admin/add-book"
           element={
-            <ProtectedRoute>
+            <AdminProtectedRoute>
               <AddBook />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
         <Route
           path="/admin/manage-book"
           element={
-            <ProtectedRoute>
+            <AdminProtectedRoute>
               <ManageBook />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
         <Route
           path="/admin/change-password"
           element={
-            <ProtectedRoute>
+            <AdminProtectedRoute>
               <AdminChangePassword />
-            </ProtectedRoute>
+            </AdminProtectedRoute>
           }
         />
         <Route path="/user/signup" element={<UserSignup />} />
@@ -88,6 +90,22 @@ function App() {
           element={
             <StudentProtectedRoute>
               <StudentDashboard />
+            </StudentProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/books"
+          element={
+            <StudentProtectedRoute>
+              <StudentBooks />
+            </StudentProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/profile"
+          element={
+            <StudentProtectedRoute>
+              <StudentProfile />
             </StudentProtectedRoute>
           }
         />

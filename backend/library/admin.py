@@ -11,7 +11,7 @@ class AuthorAdmin(admin.ModelAdmin):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ["full_name", "email", "mobile", "password", "is_active"]
+    list_display = ["uid","full_name", "email", "mobile", "password", "is_active", "created_at", "updated_at"]
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):

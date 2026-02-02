@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { BASE_API } from "../config/api.js";
+import { BASE_API } from "../../config/api.js";
 import { useNavigate } from "react-router-dom";
 
 function AddBook() {

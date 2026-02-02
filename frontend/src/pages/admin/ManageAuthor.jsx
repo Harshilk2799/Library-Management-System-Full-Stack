@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { BASE_API } from "../config/api.js";
+import { BASE_API } from "../../config/api.js";
 
 function ManageAuthor() {
   const navigate = useNavigate();

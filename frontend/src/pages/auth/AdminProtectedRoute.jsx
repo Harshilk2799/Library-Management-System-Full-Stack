@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 
-function ProtectedRoute({ children }) {
+function AdminProtectedRoute({ children }) {
   const user = localStorage.getItem("adminUser");
 
   if (!user) {
@@ -9,4 +9,4 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-export default ProtectedRoute;
+export default AdminProtectedRoute;

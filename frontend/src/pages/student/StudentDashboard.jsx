@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { BASE_API } from "../config/api.js";
+import { BASE_API } from "../../config/api.js";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -58,7 +58,7 @@ function StudentDashboard() {
               >
                 <i className="fa-solid fa-user-graduate text-primary"></i>
               </span>
-              <span>Student Dashboard</span>
+              <span>My Library Dashboard</span>
             </h3>
           </div>
           <p className="mt-3">

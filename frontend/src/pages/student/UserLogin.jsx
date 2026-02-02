@@ -1,39 +1,32 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { BASE_API } from "../config/api.js";
-import { Link } from "react-router-dom";
+import { BASE_API } from "../../config/api.js";
+import { Link, useNavigate } from "react-router-dom";
 
-function UserSignup() {
+function UserLogin() {
   const [formData, setFormData] = useState({
-    full_name: "",
     email: "",
-    mobile: "",
     password: "",
-    confirm_password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (formData.password.length < 6) {
-      toast.error("Password must be at least 6 character long");
-      return;
-    }
     setIsLoading(true);
     console.log(formData);
     try {
-      const res = await axios.post(`${BASE_API}/user/signup/`, formData);
+      const res = await axios.post(`${BASE_API}/user/login/`, formData);
       if (res.data.success) {
-        toast.success(res.data.message || `Registration successful!`);
+        toast.success(res.data.message || `Login successful!`);
+        localStorage.setItem("studentUserInfo", res.data.student_id);
         setFormData({
-          full_name: "",
           email: "",
-          mobile: "",
           password: "",
-          confirm_password: "",
         });
+        navigate("/user/dashboard");
       }
     } catch (error) {
       console.log(error);
@@ -74,11 +67,11 @@ function UserSignup() {
         <div className="row mb-3">
           <div className="col-md-8 mx-auto text-center">
             <h4 className="fw-semibold mb-1">
-              <i className="fa-solid fa-user-plus text-primary me-2"></i>
-              User Signup
+              <i className="fa-solid fa-user text-primary me-2"></i>
+              User Login
             </h4>
             <p className="text-muted small">
-              Create your account by filling the form below.
+              Please enter your login credentials to access your account.
             </p>
           </div>
         </div>
@@ -90,26 +83,6 @@ function UserSignup() {
             <div className="card border-0 shadow-sm rounded-4">
               <div className="card-body p-4">
                 <form onSubmit={handleSubmit} noValidate>
-                  <div className="mb-3">
-                    <label
-                      htmlFor="full_name"
-                      className="form-label small fw-medium"
-                    >
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="full_name"
-                      value={formData.full_name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, full_name: e.target.value })
-                      }
-                      placeholder="Enter full name"
-                      required
-                    />
-                  </div>
-
                   <div className="mb-3">
                     <label
                       htmlFor="email"
@@ -126,26 +99,6 @@ function UserSignup() {
                         setFormData({ ...formData, email: e.target.value })
                       }
                       placeholder="Enter email address"
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label
-                      htmlFor="mobile"
-                      className="form-label small fw-medium"
-                    >
-                      Mobile No.
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="mobile"
-                      value={formData.mobile}
-                      onChange={(e) =>
-                        setFormData({ ...formData, mobile: e.target.value })
-                      }
-                      placeholder="Enter mobile"
                       required
                     />
                   </div>
@@ -170,29 +123,6 @@ function UserSignup() {
                     />
                   </div>
 
-                  <div className="mb-3">
-                    <label
-                      htmlFor="confirm_password"
-                      className="form-label small fw-medium"
-                    >
-                      Confirm Password
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="confirm_password"
-                      value={formData.confirm_password}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          confirm_password: e.target.value,
-                        })
-                      }
-                      placeholder="Enter confirm password"
-                      required
-                    />
-                  </div>
-
                   <button
                     type="submit"
                     disabled={isLoading}
@@ -201,18 +131,18 @@ function UserSignup() {
                     {isLoading ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-2"></span>
-                        Registering...
+                        Logging in...
                       </>
                     ) : (
                       <>
                         <i className="fa-solid fa-user-plus me-2"></i>
-                        Register Now
+                        Login
                       </>
                     )}
                   </button>
                   <p className="text-center mt-2 text-muted small">
-                    Already have an account?
-                    <Link to="/user/login"> Login here</Link>
+                    New here?
+                    <Link to="/user/signup"> Register now</Link>
                   </p>
                 </form>
               </div>
@@ -223,4 +153,4 @@ function UserSignup() {
     </div>
   );
 }
-export default UserSignup;
+export default UserLogin;

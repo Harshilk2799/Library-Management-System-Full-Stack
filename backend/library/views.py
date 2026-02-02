@@ -243,3 +243,33 @@ class StudentStats(APIView):
             "not_returned": not_returned
         }
         return Response({"success": True, "stats": stats}, status=status.HTTP_200_OK)
+    
+class BookListAPI(APIView):
+    def get(self, request):
+        books = Book.objects.select_related("category", "author").prefetch_related("issued_records").order_by("title")
+        serializer = BookListSerializer(books, many=True)
+        return Response({"success": True, "books": serializer.data}, status=status.HTTP_200_OK)
+
+class ProfileAPI(APIView):
+    def get_object(self, student_id):
+        return get_object_or_404(Student, uid=student_id)
+    
+    def get(self, request):
+        student_id = request.query_params.get("student_id")
+        
+        if not student_id:
+            return Response({"success": False, "message": "student_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        student = self.get_object(student_id)
+        serializer = StudentProfileSerializer(student)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def patch(self, request):
+        student_id = request.query_params.get("student_id")
+        if not student_id:
+            return Response({"success": False, "message": "student_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        student = self.get_object(student_id)
+        serializer = StudentProfileSerializer(student, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"success": True, "message": "Student profile updated successfully!"}, status=status.HTTP_200_OK)

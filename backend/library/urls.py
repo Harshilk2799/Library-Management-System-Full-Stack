@@ -9,5 +9,7 @@ urlpatterns = [
     path("admin/change-password/", AdminChangePassword.as_view(), name="change-password"),
     path("user/signup/", StudentRegistrationAPI.as_view(), name="user-signup"),
     path("user/login/", StudentLoginAPI.as_view(), name="user-login"),
-    path("user/stats/", StudentStats.as_view(), name="user-stats")
+    path("user/stats/", StudentStats.as_view(), name="user-stats"),
+    path("user/book/list/", BookListAPI.as_view(), name="book-list"),
+    path("user/profile/", ProfileAPI.as_view(), name="user-profile")
 ]

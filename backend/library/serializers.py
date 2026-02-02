@@ -53,3 +53,23 @@ class StudentSerializer(serializers.ModelSerializer):
 class StudentLoginSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=255, write_only=True)
+
+class BookListSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source="author.name", read_only=True)
+    category_name = serializers.CharField(source="category.name", read_only=True)
+    available_quantity = serializers.SerializerMethodField()
+    class Meta:
+        model = Book
+        fields = ["uid", "title", "category", "author_name", "category_name", "author", "isbn", "price", "cover_image",
+                  "is_issued", "quantity", "available_quantity"]
+
+    def get_available_quantity(self, obj):
+        issued_count = obj.issued_records.filter(is_returned=False).count()
+        available = obj.quantity - issued_count
+        return available if available >=0 else 0
+    
+class StudentProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ["full_name", "email", "mobile"]
+        read_only_fields = ["email"]
