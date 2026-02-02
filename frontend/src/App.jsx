@@ -18,6 +18,7 @@ import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentProtectedRoute from "./pages/auth/StudentProtectedRoute";
 import StudentBooks from "./pages/student/StudentBooks";
 import StudentProfile from "./pages/student/StudentProfile";
+import StudentChangePassword from "./pages/student/StudentChangePassword";
 
 function App() {
   return (
@@ -106,6 +107,14 @@ function App() {
           element={
             <StudentProtectedRoute>
               <StudentProfile />
+            </StudentProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/change-password"
+          element={
+            <StudentProtectedRoute>
+              <StudentChangePassword />
             </StudentProtectedRoute>
           }
         />

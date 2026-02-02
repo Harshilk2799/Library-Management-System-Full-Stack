@@ -71,7 +71,7 @@ function Header() {
                     className={`nav-link ${isActive("/user/login")}`}
                     to="/user/login"
                   >
-                    <i className="fa-solid fa-user me-1"></i> User Login
+                    <i className="fa-solid fa-user me-1"></i> Student Login
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -79,7 +79,8 @@ function Header() {
                     className={`nav-link ${isActive("/user/signup")}`}
                     to="/user/signup"
                   >
-                    <i className="fa-solid fa-user-plus me-1"></i> User SignUp
+                    <i className="fa-solid fa-user-plus me-1"></i> Student
+                    SignUp
                   </NavLink>
                 </li>
                 <li className="nav-item">

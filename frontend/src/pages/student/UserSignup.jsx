@@ -75,7 +75,7 @@ function UserSignup() {
           <div className="col-md-8 mx-auto text-center">
             <h4 className="fw-semibold mb-1">
               <i className="fa-solid fa-user-plus text-primary me-2"></i>
-              User Signup
+              Student Signup
             </h4>
             <p className="text-muted small">
               Create your account by filling the form below.

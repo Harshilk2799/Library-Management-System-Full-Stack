@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_API } from "../../config/api.js";
-import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function StudentProfile() {
@@ -12,7 +11,6 @@ function StudentProfile() {
   });
   const [loading, setLoading] = useState(false);
   const studentId = localStorage.getItem("studentUserInfo");
-  console.log(studentId);
 
   useEffect(() => {
     async function fetchProfile() {
