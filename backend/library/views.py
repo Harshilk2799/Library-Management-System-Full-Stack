@@ -305,3 +305,19 @@ class StudentChangePassword(APIView):
         student.password = make_password(new_password)
         student.save(update_fields=["password"])
         return Response({"success": True, "message": "Password changed successfully!"}, status=status.HTTP_200_OK)
+
+
+class RegisteredStudentAPI(APIView):
+    def get(self, request):
+        students = Student.objects.all()
+        serializer = StudentListSerializer(students, many=True)
+        return Response({"success": True, "students": serializer.data}, status=status.HTTP_200_OK)
+
+class ActiveInActiveStudentAPI(APIView):
+    def post(self, request, student_id):
+        student = get_object_or_404(Student, uid=student_id)
+        student.is_active = not student.is_active
+        student.save()
+
+        message = "Student has been activated!" if student.is_active else "Student has been blocked!"
+        return Response({"success": True, "message": message, "student": StudentListSerializer(student).data}, status=status.HTTP_200_OK)

@@ -73,3 +73,8 @@ class StudentProfileSerializer(serializers.ModelSerializer):
         model = Student
         fields = ["full_name", "email", "mobile"]
         read_only_fields = ["email"]
+
+class StudentListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = "__all__"

@@ -187,8 +187,8 @@ function Header() {
                 </li>
                 <li className="nav-item">
                   <Link
-                    className={`nav-link ${isActive("/admin/dashboard")}`}
-                    to="/admin/dashboard"
+                    className={`nav-link ${isActive("/admin/manage-students")}`}
+                    to="/admin/manage-students"
                   >
                     <i className="fa-solid fa-users me-1"></i>
                     Student
