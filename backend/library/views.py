@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from rest_framework.permissions import IsAdminUser, AllowAny
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
+from django.db.models import Count, Q
 
 class AdminLoginAPI(APIView):
     def post(self, request):
@@ -237,14 +238,16 @@ class StudentStats(APIView):
         except Student.DoesNotExist:
             return Response({"success": False, "message": "Student not found!"}, status=status.HTTP_404_NOT_FOUND)
 
-        total_books = Book.objects.count()
-        total_issued = IssuedBook.objects.filter(student=student).count()
-        not_returned = IssuedBook.objects.filter(student=student, is_returned=False).count()
+        # Optimized Queries
+        issued_stats = IssuedBook.objects.filter(student=student).aggregate(
+            total_issued=Count("id"),
+            not_returned=Count("id", filter=Q(is_returned=False))
+        )
 
         stats = {
-            "total_books": total_books,
-            "total_issued": total_issued,
-            "not_returned": not_returned
+            "total_books": Book.objects.count(),
+            "total_issued": issued_stats["total_issued"],
+            "not_returned": issued_stats["not_returned"]
         }
         return Response({"success": True, "stats": stats}, status=status.HTTP_200_OK)
     
