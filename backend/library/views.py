@@ -216,7 +216,11 @@ class StudentLoginAPI(APIView):
             password = serializer.validated_data.get("password")
             
             try:
-                student = Student.objects.get(email=email, is_active=True)
+                student = Student.objects.get(email=email)
+                # Check active status
+                if not student.is_active:
+                    return Response({"success": False, "message": "Your account is inactive. Please contact admin."}, status=status.HTTP_403_FORBIDDEN)
+                
                 if check_password(password, student.password):
                     return Response({"success": True, "message": "Login Successful!", "student_id": student.uid, "student_name": student.full_name}, status=status.HTTP_200_OK)
                 else:
