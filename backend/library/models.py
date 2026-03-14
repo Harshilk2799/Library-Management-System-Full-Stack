@@ -53,4 +53,4 @@ class IssuedBook(BaseModel):
     remark = models.TextField()
 
     def __str__(self):
-        return f"{self.book.title} - {self.student.student_id}"
+        return f"{self.book.title} - {self.student.uid}"

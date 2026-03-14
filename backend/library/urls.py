@@ -14,5 +14,8 @@ urlpatterns = [
     path("user/profile/", ProfileAPI.as_view(), name="user-profile"),
     path("user/change-password/", StudentChangePassword.as_view(), name="change-password"),
     path("admin/students/", RegisteredStudentAPI.as_view(), name="students"),
-    path("admin/active-inactive-student/<uuid:student_id>/", ActiveInActiveStudentAPI.as_view(), name="active-inactive-student")
+    path("admin/active-inactive-student/<uuid:student_id>/", ActiveInActiveStudentAPI.as_view(), name="active-inactive-student"),
+    path("admin/students/search-by-email/", StudentSearchProfileAPI.as_view(), name="admin-student-search-by-email"),
+    path("admin/books/search/", BookSearchAPI.as_view(), name="admin-book-search"),
+    path("admin/issue-book/", IssueBookAPI.as_view(), name="admin-issue-book")
 ]

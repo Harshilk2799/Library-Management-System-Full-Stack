@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Loader from "./components/Loader";
 import AdminProtectedRoute from "./pages/auth/AdminProtectedRoute";
 import StudentProtectedRoute from "./pages/auth/StudentProtectedRoute";
+import IssueBook from "./pages/admin/IssueBook";
 
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
@@ -98,6 +99,14 @@ function App() {
             element={
               <AdminProtectedRoute>
                 <ManageStudent />
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/issue-book"
+            element={
+              <AdminProtectedRoute>
+                <IssueBook />
               </AdminProtectedRoute>
             }
           />

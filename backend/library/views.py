@@ -328,3 +328,84 @@ class ActiveInActiveStudentAPI(APIView):
 
         message = "Student has been activated!" if student.is_active else "Student has been blocked!"
         return Response({"success": True, "message": message, "student": StudentListSerializer(student).data}, status=status.HTTP_200_OK)
+
+
+class StudentSearchProfileAPI(APIView):
+    def get(self, request):
+        student_email = request.query_params.get("email")
+        student = get_object_or_404(Student, email=student_email)
+        serializer = StudentProfileSerializer(student)
+        return Response({"student": serializer.data}, status=status.HTTP_200_OK)
+    
+class BookSearchAPI(APIView):
+    def get(self, request):
+        query = request.query_params.get("q")
+        
+        book = Book.objects.select_related("author", "category").filter(
+            Q(isbn__iexact=query) | Q(title__icontains=query)
+        ).first()
+
+        if not book:
+            return Response({"message": "Book not found!"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = BookSerializer(book)
+        return Response({"book": serializer.data}, status=status.HTTP_200_OK)
+    
+from django.db import transaction
+
+class IssueBookAPI(APIView):
+    def post(self, request):
+        student_email = request.data.get("email")
+        book_query = request.data.get("book")
+        remark = request.data.get("remark", "")
+
+        if not student_email or not book_query:
+            return Response({"message": "Email and book are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        student = get_object_or_404(Student, email=student_email, is_active=True)
+        
+        try:
+            with transaction.atomic():
+                book = get_object_or_404(
+                    Book,
+                    Q(title=book_query) | Q(isbn=book_query)
+                )
+
+                # Prevent duplicate active issue for the same student + book
+                already_issued = IssuedBook.objects.filter(
+                    book=book, student=student, is_returned=False
+                ).exists()
+                if already_issued:
+                    return Response(
+                        {"message": "Student has already issued this book and hasn't returned it yet."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+                issued_count = IssuedBook.objects.filter(book=book, is_returned=False).count()
+                available_qty = book.quantity - issued_count
+
+                if available_qty <= 0:
+                    return Response(
+                        {"message": "No copies of the book are currently available for issue."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+                issued_book = IssuedBook.objects.create(
+                    student=student,
+                    book=book,
+                    remark=remark,
+                    fine=0,
+                    is_returned=False
+                )
+
+                book.quantity -= 1
+                book.is_issued = True
+                book.save(update_fields=["quantity", "is_issued"])
+
+        except Exception as e:
+            return Response(
+                {"message": "An error occurred while issuing the book.", "detail": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        serializer = IssuedBookSerializer(issued_book)
+        return Response({"message": "Book issued successfully!", "data": serializer.data}, status=status.HTTP_201_CREATED)
