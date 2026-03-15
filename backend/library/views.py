@@ -10,7 +10,8 @@ from django.core.exceptions import ValidationError
 from rest_framework.permissions import IsAdminUser, AllowAny
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F
+from django.utils import timezone
 
 class AdminLoginAPI(APIView):
     def post(self, request):
@@ -240,8 +241,8 @@ class StudentStats(APIView):
 
         # Optimized Queries
         issued_stats = IssuedBook.objects.filter(student=student).aggregate(
-            total_issued=Count("id"),
-            not_returned=Count("id", filter=Q(is_returned=False))
+            total_issued=Count("uid"),
+            not_returned=Count("uid", filter=Q(is_returned=False))
         )
 
         stats = {
@@ -409,3 +410,73 @@ class IssueBookAPI(APIView):
 
         serializer = IssuedBookSerializer(issued_book)
         return Response({"message": "Book issued successfully!", "data": serializer.data}, status=status.HTTP_201_CREATED)
+
+class ManageIssuedBook(APIView):
+    def get(self, request):
+        issue_book = IssuedBook.objects.select_related("book", "student")
+        serializer = IssuedBookSerializer(issue_book, many=True)
+        return Response({"issued": serializer.data}, status=status.HTTP_200_OK)
+    
+class IssuedBookDetailAPI(APIView):
+    def get(self, request, issued_id):
+        issued_book = get_object_or_404(IssuedBook, uid=issued_id)
+        serializer = IssuedBookSerializer(issued_book)
+        return Response({"issued": serializer.data}, status=status.HTTP_200_OK)
+    
+class ReturnBookAPI(APIView):
+    def post(self, request, issued_id):
+        issued_book = get_object_or_404(IssuedBook.objects.select_related("book"), uid=issued_id)
+        if issued_book.is_returned:
+            return Response(
+                {"success": False, "message": "Book has already been returned."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        fine = request.data.get("fine", 0)
+        try:
+            fine = int(fine)
+            if fine < 0:
+                raise ValueError("Fine cannot be negative.")
+        except (ValueError, TypeError):
+            return Response(
+                {"success": False, "message": "Invalid fine value."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            with transaction.atomic():
+                issued_book.is_returned = True
+                issued_book.fine = fine
+                issued_book.returned_at = timezone.now()
+                issued_book.save(update_fields=["is_returned", "fine", "returned_at"])
+
+                book = issued_book.book
+                # Use F() expression to avoid race condition on quantity
+                Book.objects.filter(pk=book.pk).update(
+                    quantity=F("quantity") + 1
+                )
+
+                # Recompute is_issued from DB (after update)
+                book.refresh_from_db()
+                book.is_issued = book.issued_records.filter(is_returned=False).exists()
+                book.save(update_fields=["is_issued"])
+
+        except Exception as e:
+            return Response(
+                {"success": False, "message": "An error occurred while processing the return."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response(
+            {"success": True, "message": "Book returned successfully."},
+            status=status.HTTP_200_OK
+        )
+
+
+class StudentIssueHistoryAPI(APIView):
+    def get(self, request, student_id):
+        student = get_object_or_404(Student, uid=student_id)
+        issued_books = IssuedBook.objects.filter(student=student).select_related("student", "book")
+        issues_serializer = IssuedBookSerializer(issued_books, many=True)
+        student_serializer = StudentSerializer(student)
+
+        return Response({"books": issues_serializer.data, "student": student_serializer.data}, status=status.HTTP_200_OK)

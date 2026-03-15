@@ -169,7 +169,10 @@ function Header() {
                       </Link>
                     </li>
                     <li>
-                      <Link className="dropdown-item" to="/admin/add-category">
+                      <Link
+                        className="dropdown-item"
+                        to="/admin/manage-issue-book"
+                      >
                         <i className="fa-solid fa-arrow-right-arrow-left me-1"></i>{" "}
                         Issued Book
                       </Link>

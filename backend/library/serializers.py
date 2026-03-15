@@ -81,8 +81,11 @@ class StudentListSerializer(serializers.ModelSerializer):
 
 class IssuedBookSerializer(serializers.ModelSerializer):
     book_title = serializers.CharField(source="book.title", read_only=True)
+    book_isbn = serializers.CharField(source="book.isbn", read_only=True)
+    book_img = serializers.ImageField(source="book.cover_image", read_only=True)
     student_email = serializers.CharField(source="student.email", read_only=True)
+    student_name = serializers.CharField(source="student.full_name", read_only=True)
     class Meta:
         model = IssuedBook
         fields = "__all__"
-        extra_fields = ["book_title", "student_email"]
+        # extra_fields = ["book_title", "student_email"]

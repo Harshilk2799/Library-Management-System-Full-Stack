@@ -17,5 +17,9 @@ urlpatterns = [
     path("admin/active-inactive-student/<uuid:student_id>/", ActiveInActiveStudentAPI.as_view(), name="active-inactive-student"),
     path("admin/students/search-by-email/", StudentSearchProfileAPI.as_view(), name="admin-student-search-by-email"),
     path("admin/books/search/", BookSearchAPI.as_view(), name="admin-book-search"),
-    path("admin/issue-book/", IssueBookAPI.as_view(), name="admin-issue-book")
+    path("admin/issue-book/", IssueBookAPI.as_view(), name="admin-issue-book"),
+    path("admin/manage-issue-book/", ManageIssuedBook.as_view(), name="admin-manage-issue-book"),
+    path("admin/issue-book-detail/<uuid:issued_id>/", IssuedBookDetailAPI.as_view(), name="admin-issue-book-detail"),
+    path("admin/return-book/<uuid:issued_id>/", ReturnBookAPI.as_view(), name="admin-return-book"),
+    path("admin/student-issue-history/<uuid:student_id>/", StudentIssueHistoryAPI.as_view(), name="admin-student-issue-history")
 ]

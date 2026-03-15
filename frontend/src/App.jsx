@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Loader from "./components/Loader";
 import AdminProtectedRoute from "./pages/auth/AdminProtectedRoute";
 import StudentProtectedRoute from "./pages/auth/StudentProtectedRoute";
-import IssueBook from "./pages/admin/IssueBook";
+import IssuedBookDetails from "./pages/admin/IssuedBookDetails";
 
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
@@ -19,6 +19,9 @@ const ManageBook = lazy(() => import("./pages/admin/ManageBook"));
 const AdminChangePassword = lazy(() =>
   import("./pages/admin/AdminChangePassword")
 );
+const StudentHistory = lazy(() => import("./pages/admin/StudentHistory"));
+const IssueBook = lazy(() => import("./pages/admin/IssueBook"));
+const ManageIssuedBook = lazy(() => import("./pages/admin/ManageIssuedBook"));
 const UserSignup = lazy(() => import("./pages/student/UserSignup"));
 const UserLogin = lazy(() => import("./pages/student/UserLogin"));
 const StudentDashboard = lazy(() => import("./pages/student/StudentDashboard"));
@@ -107,6 +110,30 @@ function App() {
             element={
               <AdminProtectedRoute>
                 <IssueBook />
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/manage-issue-book"
+            element={
+              <AdminProtectedRoute>
+                <ManageIssuedBook />
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/issued-book/:issued_id"
+            element={
+              <AdminProtectedRoute>
+                <IssuedBookDetails />
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/students/:studentId/history"
+            element={
+              <AdminProtectedRoute>
+                <StudentHistory />
               </AdminProtectedRoute>
             }
           />

@@ -104,7 +104,7 @@ function IssueBook() {
             </div>
             <button
               className="btn btn-sm btn-outline-primary"
-              onClick={() => navigate("/admin/issue-books")}
+              onClick={() => navigate("/admin/manage-issue-book")}
             >
               Manage Issued Books
             </button>
@@ -299,7 +299,7 @@ function IssueBook() {
                     </div>
                     {book && (
                       <div className="text-muted small">
-                        ISBN: {book.isbn} - Author Name: {book.author_name}
+                        ISBN: {book.isbn} - QTY: {book.quantity}
                       </div>
                     )}
                   </div>

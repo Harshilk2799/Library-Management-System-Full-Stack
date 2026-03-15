@@ -76,7 +76,7 @@ function ManageStudent() {
             </div>
             <button
               className="btn btn-sm btn-outline-primary"
-              onClick={() => navigate("/admin/issue-books")}
+              onClick={() => navigate("/admin/issue-book")}
             >
               <i className="fa-solid fa-plus me-1"></i> Issue Books
             </button>
@@ -140,6 +140,14 @@ function ManageStudent() {
                                   : "fa-user-check"
                               }`}
                             ></i>
+                          </button>
+                          <button
+                            className="btn btn-sm btn-success"
+                            onClick={() =>
+                              navigate(`/admin/students/${student.uid}/history`)
+                            }
+                          >
+                            Details
                           </button>
                         </td>
                       </tr>
