@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 from rest_framework.permissions import IsAdminUser, AllowAny
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password
-from django.db.models import Count, Q, F
+from django.db.models import Count, Q, F, Sum
 from django.utils import timezone
 
 class AdminLoginAPI(APIView):
@@ -480,3 +480,48 @@ class StudentIssueHistoryAPI(APIView):
         student_serializer = StudentSerializer(student)
 
         return Response({"books": issues_serializer.data, "student": student_serializer.data}, status=status.HTTP_200_OK)
+    
+class AdminDashboardStatsAPI(APIView):
+    def get(self, request):
+        student_stats = Student.objects.aggregate(
+            total_student = Count("uid"),
+            active_student = Count("uid", filter=Q(is_active=True)),
+            block_student=Count("uid", filter=Q(is_active=False))
+        )
+
+        book_stats = Book.objects.aggregate(
+            total_book = Count("uid"),
+            available_book = Count("uid", filter=Q(quantity__gt=0)),
+            out_of_stock_books = Count("uid", filter=Q(quantity=0))
+        )
+
+        issued_stats = IssuedBook.objects.aggregate(
+            total=Count("uid"),
+            currently_issued=Count("uid", filter=Q(is_returned=False)),
+            returned=Count("uid", filter=Q(is_returned=True)),
+        )
+
+        total_categories = Category.objects.count()
+        total_authors = Author.objects.count()
+
+        dashboard_stats = {
+            "students": {
+                "total": student_stats["total_student"],
+                "active": student_stats["active_student"],
+                "blocked": student_stats["block_student"],
+            },
+            "books": {
+                "total": book_stats["total_book"],
+                "available": book_stats["available_book"],
+                "out_of_stock": book_stats["out_of_stock_books"],
+            },
+            "issued_books": {
+                "total": issued_stats["total"],
+                "currently_issued": issued_stats["currently_issued"],
+                "returned": issued_stats["returned"],
+            },
+            "categories": {"total": total_categories},
+            "authors": {"total": total_authors},
+        }
+
+        return Response(dashboard_stats, status=status.HTTP_200_OK)

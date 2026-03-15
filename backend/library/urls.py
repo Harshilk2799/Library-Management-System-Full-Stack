@@ -21,5 +21,6 @@ urlpatterns = [
     path("admin/manage-issue-book/", ManageIssuedBook.as_view(), name="admin-manage-issue-book"),
     path("admin/issue-book-detail/<uuid:issued_id>/", IssuedBookDetailAPI.as_view(), name="admin-issue-book-detail"),
     path("admin/return-book/<uuid:issued_id>/", ReturnBookAPI.as_view(), name="admin-return-book"),
-    path("admin/student-issue-history/<uuid:student_id>/", StudentIssueHistoryAPI.as_view(), name="admin-student-issue-history")
+    path("admin/student-issue-history/<uuid:student_id>/", StudentIssueHistoryAPI.as_view(), name="admin-student-issue-history"),
+    path("admin/dashboard-stats/", AdminDashboardStatsAPI.as_view(), name="admin-dashboard-stats")
 ]
