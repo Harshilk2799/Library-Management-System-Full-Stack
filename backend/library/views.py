@@ -525,3 +525,15 @@ class AdminDashboardStatsAPI(APIView):
         }
 
         return Response(dashboard_stats, status=status.HTTP_200_OK)
+    
+class StudentIssuedBookAPI(APIView):
+    def get(self, request):
+        student_id = request.query_params.get("student_id")
+        if not student_id:
+            return Response({"message": "student_id query parameter is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        student = get_object_or_404(Student, uid=student_id)
+        issued_books = IssuedBook.objects.filter(student=student).select_related("book", "book__category", "book__author", "student").order_by("-issued_at")
+
+        serializer = IssuedBookSerializer(issued_books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

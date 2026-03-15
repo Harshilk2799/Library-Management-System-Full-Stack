@@ -31,6 +31,9 @@ const StudentChangePassword = lazy(() =>
   import("./pages/student/StudentChangePassword")
 );
 const ManageStudent = lazy(() => import("./pages/admin/ManageStudent"));
+const StudentIssuedBook = lazy(() =>
+  import("./pages/student/StudentIssuedBook")
+);
 
 function App() {
   return (
@@ -152,6 +155,14 @@ function App() {
             element={
               <StudentProtectedRoute>
                 <StudentBooks />
+              </StudentProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/issued-books"
+            element={
+              <StudentProtectedRoute>
+                <StudentIssuedBook />
               </StudentProtectedRoute>
             }
           />

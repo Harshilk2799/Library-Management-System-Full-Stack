@@ -163,7 +163,7 @@ function StudentDashboard() {
                   </p>
                   <div className="mt-3">
                     <Link
-                      to="/user/books"
+                      to="/user/issued-books"
                       className="small text-primary text-decoration-none"
                     >
                       View issue history
